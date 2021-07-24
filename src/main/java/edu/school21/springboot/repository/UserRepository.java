@@ -1,4 +1,4 @@
-package edu.school21.springboot.repository.api;
+package edu.school21.springboot.repository;
 
 import edu.school21.springboot.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

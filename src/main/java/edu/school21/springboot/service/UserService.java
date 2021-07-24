@@ -1,9 +1,8 @@
 package edu.school21.springboot.service;
 
-import edu.school21.springboot.controller.AuthorizationController;
 import edu.school21.springboot.entity.Role;
 import edu.school21.springboot.entity.User;
-import edu.school21.springboot.repository.api.UserRepository;
+import edu.school21.springboot.repository.UserRepository;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
