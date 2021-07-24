@@ -1,10 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
 <body>
-dwdad
+<h1 th:text="#{title}"></h1>
+<p th:text="#{message}"></p>
+<form action="/home?lang=en" method="get">
+    <input type="hidden" name="lang" th:value="en">
+    <input type="submit" placeholder="en" th:value="en">
+</form>
+<form action="/home?lang=ru" method="get">
+    <input type="hidden" name="lang" th:value="ru" >
+    <input type="submit" placeholder="ru" th:value="ru">
+</form>
+<a href="/signIn">q</a>
 </body>
 </html>

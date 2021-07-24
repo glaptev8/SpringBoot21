@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="/registration" method="post">
+    <label>name:</label><br>
+    <input type="text" name="username" placeholder="name"><br>
+    <th:block th:if="${errors != null && errors.getFieldError('name') != null}">
+        <span th:text="${errors.getFieldError('name').getDefaultMessage()}"></span><br>
+    </th:block>
+    <label>email:</label><br>
+    <input type="text" name="email" placeholder="email@email.bk.ru"><br>
+    <th:block th:if="${errors != null && errors.getFieldError('email') != null}">
+        <span th:text="${errors.getFieldError('email').getDefaultMessage()}"></span><span th:text="${errors != null && errors.getFieldError('email') != null} ? ${errors.getFieldError('email').getDefaultMessage()}"></span><br>
+    </th:block>
+    <label>phone:</label><br>
+    <input type="text" name="phone" placeholder="+7(999)9999999"><br>
+    <th:block th:if="${errors != null && errors.getFieldError('phone') != null}">
+        <span th:text="${errors.getFieldError('phone').getDefaultMessage()}"></span><br>
+    </th:block>
+    <label>password:</label><br>
+    <input type="password" name="password"><br>
+    <th:block th:if="${errors != null && errors.getFieldError('password') != null}">
+        <span th:text="${errors.getFieldError('password').getDefaultMessage()}"></span><br>
+    </th:block>
+    <label>repeat password:</label><br>
+    <input type="password" name="matchingPassword"><br>
+    <th:block th:if="${errors != null && errors.getFieldError('matchingPassword') != null}">
+        <span th:text="${errors.getFieldError('matchingPassword').getDefaultMessage()}"></span><br>
+    </th:block>
+    <label>submit:</label>
+    <input type="submit"><br>
+</form>
+</body>
+</html>
