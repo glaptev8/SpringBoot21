@@ -2,15 +2,15 @@ package edu.school21.springboot;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.PropertySource;
 
 import java.util.Arrays;
 
 @SpringBootApplication(scanBasePackages = "edu.school21.springboot")
+@PropertySource({"classpath:messages_ru.properties", "classpath:messages_en.properties"})
 public class Application {
   public static void main(String[] args) {
     SpringApplication.run(Application.class, args);

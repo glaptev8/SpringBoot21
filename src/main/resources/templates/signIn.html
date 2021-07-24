@@ -5,13 +5,21 @@
     <title>Title</title>
 </head>
 <body>
+<form action="/signIn?lang=en" method="get">
+    <input type="hidden" name="lang" th:value="en">
+    <input type="submit" placeholder="en" th:value="en">
+</form>
+<form action="/signIn?lang=ru" method="get">
+    <input type="hidden" name="lang" th:value="ru" >
+    <input type="submit" placeholder="ru" th:value="ru">
+</form>
 <form action="/signIn" method="post">
-    <label>name:</label><br>
+    <label th:text="#{userName}"></label><br>
     <input type="text" name="username" placeholder="username"><br>
-    <label>password:</label><br>
+    <label th:text="#{password}">password:</label><br>
     <input type="password" name="password"><br>
-    <label>submit:</label>
-    <input type="submit"><br>
+    <label th:text="#{submit}"></label>
+    <input type="submit" th:value="#{submit}"><br>
 </form>
 <a href="/registration">q</a>
 </body>

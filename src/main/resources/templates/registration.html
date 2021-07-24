@@ -5,34 +5,42 @@
     <title>Title</title>
 </head>
 <body>
+<form action="/registration?lang=en" method="get">
+    <input type="hidden" name="lang" th:value="en">
+    <input type="submit" placeholder="en" th:value="en">
+</form>
+<form action="/registration?lang=ru" method="get">
+    <input type="hidden" name="lang" th:value="ru" >
+    <input type="submit" placeholder="ru" th:value="ru">
+</form>
 <form action="/registration" method="post">
-    <label>name:</label><br>
+    <label th:text="#{userName}"></label><br>
     <input type="text" name="username" placeholder="name"><br>
     <th:block th:if="${errors != null && errors.getFieldError('name') != null}">
         <span th:text="${errors.getFieldError('name').getDefaultMessage()}"></span><br>
     </th:block>
-    <label>email:</label><br>
+    <label th:text="#{email}"></label><br>
     <input type="text" name="email" placeholder="email@email.bk.ru"><br>
     <th:block th:if="${errors != null && errors.getFieldError('email') != null}">
         <span th:text="${errors.getFieldError('email').getDefaultMessage()}"></span><span th:text="${errors != null && errors.getFieldError('email') != null} ? ${errors.getFieldError('email').getDefaultMessage()}"></span><br>
     </th:block>
-    <label>phone:</label><br>
+    <label th:text="#{phone}"></label><br>
     <input type="text" name="phone" placeholder="+7(999)9999999"><br>
     <th:block th:if="${errors != null && errors.getFieldError('phone') != null}">
         <span th:text="${errors.getFieldError('phone').getDefaultMessage()}"></span><br>
     </th:block>
-    <label>password:</label><br>
+    <label th:text="#{password}"></label><br>
     <input type="password" name="password"><br>
     <th:block th:if="${errors != null && errors.getFieldError('password') != null}">
         <span th:text="${errors.getFieldError('password').getDefaultMessage()}"></span><br>
     </th:block>
-    <label>repeat password:</label><br>
+    <label th:text="#{repeat.password}"></label><br>
     <input type="password" name="matchingPassword"><br>
     <th:block th:if="${errors != null && errors.getFieldError('matchingPassword') != null}">
         <span th:text="${errors.getFieldError('matchingPassword').getDefaultMessage()}"></span><br>
     </th:block>
-    <label>submit:</label>
-    <input type="submit"><br>
+    <label th:text="#{submit}"></label>
+    <input type="submit" th:value="#{submit}"><br>
 </form>
 </body>
 </html>

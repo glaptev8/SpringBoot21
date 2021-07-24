@@ -62,7 +62,7 @@ public class User {
     name = "password",
     nullable = false
   )
-//  @ValidPassword
+//  @ValidPassword(message = "qq")
   private String password;
 
 //  @NotEmpty
