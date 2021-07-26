@@ -7,15 +7,21 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.UUID;
 
 @Service
 public class UserService {
 
   @Autowired
-  UserRepository userRepository;
+  private UserRepository userRepository;
+  @Autowired
+  private BCryptPasswordEncoder bCryptPasswordEncoder;
+  @Autowired
+  private MailSender mailSender;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
@@ -27,9 +33,30 @@ public class UserService {
       return false;
     }
     user.setRoles(Collections.singleton(Role.USER));
-    user.setActive(true);
+    user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+    user.setActive(false);
+    String uuid = UUID.randomUUID().toString();
+    user.setActivateCode(uuid);
+    mailSender
+      .send(user.getEmail(),
+        "activateCode",
+        String.format("Dear %s, visit this link for activate your account http://localhost:8080/activate/%s",
+          user.getUsername(),
+          uuid));
     userRepository.save(user);
     LOGGER.info("User was save {}", ToStringBuilder.reflectionToString(user));
+    return true;
+  }
+
+  public boolean activate(String code) {
+    User byActivateCode = userRepository.findByActivateCode(code);
+    if (byActivateCode == null) {
+      return false;
+    }
+    byActivateCode.setActive(true);
+    byActivateCode.setActivateCode(null);
+    byActivateCode.setActive(true);
+    userRepository.save(byActivateCode);
     return true;
   }
 }

@@ -5,24 +5,24 @@
     <title>Title</title>
 </head>
 <body>
-<form action="/registration?lang=en" method="get">
+<form th:action="@{/signUp}" method="get">
     <input type="hidden" name="lang" th:value="en">
     <input type="submit" placeholder="en" th:value="en">
 </form>
-<form action="/registration?lang=ru" method="get">
+<form th:action="@{/signUp}" method="get">
     <input type="hidden" name="lang" th:value="ru" >
     <input type="submit" placeholder="ru" th:value="ru">
 </form>
-<form action="/registration" method="post">
+<form th:action="@{/signUp}" method="post">
     <label th:text="#{userName}"></label><br>
     <input type="text" name="username" placeholder="name"><br>
-    <th:block th:if="${errors != null && errors.getFieldError('name') != null}">
-        <span th:text="${errors.getFieldError('name').getDefaultMessage()}"></span><br>
+    <th:block th:if="${errors != null && errors.getFieldError('username') != null}">
+        <span th:text="${errors.getFieldError('username').getDefaultMessage()}"></span><br>
     </th:block>
     <label th:text="#{email}"></label><br>
     <input type="text" name="email" placeholder="email@email.bk.ru"><br>
     <th:block th:if="${errors != null && errors.getFieldError('email') != null}">
-        <span th:text="${errors.getFieldError('email').getDefaultMessage()}"></span><span th:text="${errors != null && errors.getFieldError('email') != null} ? ${errors.getFieldError('email').getDefaultMessage()}"></span><br>
+        <span th:text="${errors.getFieldError('email').getDefaultMessage()}"></span><br>
     </th:block>
     <label th:text="#{phone}"></label><br>
     <input type="text" name="phone" placeholder="+7(999)9999999"><br>
@@ -40,7 +40,8 @@
         <span th:text="${errors.getFieldError('matchingPassword').getDefaultMessage()}"></span><br>
     </th:block>
     <label th:text="#{submit}"></label>
-    <input type="submit" th:value="#{submit}"><br>
+    <input type="submit" th:value="#{signUp}"><br>
 </form>
+<a href="/signIn" th:text="#{signIn}"></a>
 </body>
 </html>

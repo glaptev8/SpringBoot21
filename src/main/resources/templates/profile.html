@@ -1,15 +1,16 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<h1 th:text="#{title}"></h1>
-<p th:text="#{message}"></p>
-<form action="/home?lang=en" method="get">
+<form th:action="@{/profile}" method="get">
     <input type="hidden" name="lang" th:value="en">
     <input type="submit" placeholder="en" th:value="en">
 </form>
-<form action="/home?lang=ru" method="get">
+<form th:action="@{/profile}" method="get">
     <input type="hidden" name="lang" th:value="ru" >
     <input type="submit" placeholder="ru" th:value="ru">
 </form>
-<a href="/signIn">q</a>
+<h1 th:text="#{profile}"></h1>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" th:value="#{logout}">
+</form>
 </body>
 </html>

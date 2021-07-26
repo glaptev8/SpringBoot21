@@ -1,5 +1,11 @@
 package edu.school21.springboot.entity;
 
+import edu.school21.springboot.validation.annotation.PasswordMatches;
+import edu.school21.springboot.validation.annotation.ValidPassword;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -15,11 +21,14 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-//@PasswordMatches
+@PasswordMatches(message = "{password.not.matches}")
 @Entity(name = "app_user")
-public class User {
+public class User implements UserDetails {
   @Id
   @GeneratedValue(strategy= GenerationType.AUTO)
   private Long id;
@@ -29,8 +38,8 @@ public class User {
     nullable = false,
     unique = true
   )
-  @NotNull
-  @NotEmpty
+  @NotNull(message = "{not.null}")
+  @NotEmpty(message = "{not.empty}")
   private String username;
 
   @Column(
@@ -38,7 +47,7 @@ public class User {
     nullable = false
   )
 
-//  @Pattern(regexp = "^(\\+7)*\\(?[489][0-9]{2}\\)[0-9]{7}$", message = "phone is not valid")
+  @Pattern(regexp = "^(\\+7)*\\(?[489][0-9]{2}\\)[0-9]{7}$", message = "{phone.not.valid}")
   private String phone;
 
   @Column(name = "active")
@@ -49,9 +58,9 @@ public class User {
   @Enumerated(EnumType.STRING)
   private Set<Role> roles;
 
-//  @Email
-//  @NotEmpty
-//  @NotNull
+  @Email
+  @NotEmpty(message = "{not.empty}")
+  @NotNull(message = "{not.null}")
   @Column(
     name = "email",
     nullable = false
@@ -62,13 +71,16 @@ public class User {
     name = "password",
     nullable = false
   )
-//  @ValidPassword(message = "qq")
+  @ValidPassword(message = "{password.not.valid}")
   private String password;
 
-//  @NotEmpty
-//  @NotNull
+  @NotEmpty(message = "{not.empty}")
+  @NotNull(message = "{not.null}")
   @Transient
   private String matchingPassword;
+
+  @Column(name = "activate_code")
+  private String activateCode;
 
   public User() {
   }
@@ -102,6 +114,26 @@ public class User {
     return username;
   }
 
+  @Override
+  public boolean isAccountNonExpired() {
+    return isActive();
+  }
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return isActive();
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return isActive();
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return isActive();
+  }
+
   public void setUsername(String name) {
     this.username = name;
   }
@@ -130,6 +162,11 @@ public class User {
     this.matchingPassword = matchingPassword;
   }
 
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return this.roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.name())).collect(Collectors.toSet());
+  }
+
   public String getPassword() {
     return password;
   }
@@ -152,5 +189,13 @@ public class User {
 
   public void setRoles(Set<Role> roles) {
     this.roles = roles;
+  }
+
+  public String getActivateCode() {
+    return activateCode;
+  }
+
+  public void setActivateCode(String activateCode) {
+    this.activateCode = activateCode;
   }
 }

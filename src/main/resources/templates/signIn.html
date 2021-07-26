@@ -5,22 +5,24 @@
     <title>Title</title>
 </head>
 <body>
-<form action="/signIn?lang=en" method="get">
+<form th:action="@{/signIn}" method="get">
     <input type="hidden" name="lang" th:value="en">
     <input type="submit" placeholder="en" th:value="en">
 </form>
-<form action="/signIn?lang=ru" method="get">
+<form th:action="@{/signIn}" method="get">
     <input type="hidden" name="lang" th:value="ru" >
     <input type="submit" placeholder="ru" th:value="ru">
 </form>
-<form action="/signIn" method="post">
+<form th:action="@{/signIn}" method="post">
     <label th:text="#{userName}"></label><br>
     <input type="text" name="username" placeholder="username"><br>
     <label th:text="#{password}">password:</label><br>
     <input type="password" name="password"><br>
+    <label th:text="#{rememberMe}"></label>
+    <input type="checkbox" name="remember-me"/><br>
     <label th:text="#{submit}"></label>
-    <input type="submit" th:value="#{submit}"><br>
+    <input type="submit" th:value="#{signIn}"><br>
 </form>
-<a href="/registration">q</a>
+<a href="/signUp" th:text="#{signUp}"></a>
 </body>
 </html>

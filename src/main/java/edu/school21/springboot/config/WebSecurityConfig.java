@@ -1,50 +1,64 @@
 package edu.school21.springboot.config;
 
-import edu.school21.springboot.service.UserService;
+import edu.school21.springboot.entity.Role;
+import edu.school21.springboot.security.MySimpleUrlAuthenticationSuccessHandler;
+import edu.school21.springboot.security.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-
-import javax.sql.DataSource;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
   @Autowired
-  private DataSource dataSource;
+  @Qualifier("userDetailServiceImpl")
+  private UserDetailServiceImpl userDetailService;
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.csrf().disable()
+    http
       .authorizeRequests()
-        .antMatchers("/signIn","/", "/registration", "/home").permitAll()
+        .antMatchers("/signIn", "/signUp", "/activate/*").permitAll()
+        .antMatchers("/admin/**").hasAnyRole(Role.ADMIN.name())
         .anyRequest().authenticated()
       .and()
         .formLogin()
         .loginPage("/signIn")
-        .defaultSuccessUrl("/home", true)
+        .successHandler(myAuthenticationSuccessHandler())
         .permitAll()
       .and()
         .logout()
-        .permitAll();
+        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
+        .invalidateHttpSession(true)
+        .clearAuthentication(true)
+        .deleteCookies("JSESSIONID", "remember-me")
+        .logoutSuccessUrl("/signIn")
+        .permitAll()
+      .and()
+        .rememberMe().key("uniqueAndSecret");
+  }
+
+  @Bean
+  public BCryptPasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
+    return new MySimpleUrlAuthenticationSuccessHandler();
   }
 
   @Override
   public void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.jdbcAuthentication()
-      .dataSource(dataSource)
-      .passwordEncoder(NoOpPasswordEncoder.getInstance())
-      .usersByUsernameQuery("select username, password, active from app_user where username=?")
-      .authoritiesByUsernameQuery("select u.username, ur.roles from app_user u inner join user_role ur on u.id = ur.user_id where u.username=?");
+    auth.userDetailsService(userDetailService);
   }
 }

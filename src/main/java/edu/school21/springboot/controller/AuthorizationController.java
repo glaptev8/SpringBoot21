@@ -11,7 +11,10 @@ import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import javax.validation.Valid;
 
 @Controller
 public class AuthorizationController {
@@ -22,14 +25,14 @@ public class AuthorizationController {
   private static final Logger LOGGER = LoggerFactory.getLogger(AuthorizationController.class);
 
 
-  @GetMapping("/home")
+  @GetMapping("/profile")
   public String main() {
-    return "home";
+    return "profile";
   }
 
-  @GetMapping("/registration")
-  public String registrationGet() {
-    return "registration";
+  @GetMapping("/signUp")
+  public String signUpGet() {
+    return "signUp";
   }
 
   @GetMapping("/signIn")
@@ -37,17 +40,23 @@ public class AuthorizationController {
     return "signIn";
   }
 
-  @PostMapping("/registration")
-  public String registrationPost(User user,
+  @PostMapping("/signUp")
+  public String signUpPost(@Valid User user,
                                  Errors errors,
                                  Model model) {
     if (CollectionUtils.isEmpty(errors.getAllErrors())) {
       userService.save(user);
-      return "home";
+      return "signIn";
     } else {
       LOGGER.info("not valid form for user {}", ToStringBuilder.reflectionToString(user));
       model.addAttribute("errors", errors);
-      return "signIn";
+      return "signUp";
     }
+  }
+
+  @GetMapping("/activate/{code}")
+  public String activateAccount(@PathVariable String code) {
+    userService.activate(code);
+    return "redirect:/login";
   }
 }
